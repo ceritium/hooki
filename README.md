@@ -2,6 +2,11 @@
 
 Add before and after callbacks to methods.
 
+## Sponsor
+
+This project is sponsored by [babelfu.com](https://babelfu.com)
+[![Babelfu is a Github based translation service](https://babelfu.com/banner.png)](https://babelfu.com)
+
 ## Installation
 
 Install the gem and add it to the application's Gemfile by executing:
