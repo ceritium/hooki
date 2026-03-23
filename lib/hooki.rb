@@ -53,8 +53,9 @@ module Hooki
   end
 
   def self.rehooki(parent, child)
+    child.instance_variable_set(:@lock, Mutex.new)
     INSTANCE_VARIABLE_LIST.each do |instance_variable|
-      child.instance_variable_set(instance_variable, parent.instance_variable_get(instance_variable))
+      child.instance_variable_set(instance_variable, parent.instance_variable_get(instance_variable).dup)
     end
   end
 end

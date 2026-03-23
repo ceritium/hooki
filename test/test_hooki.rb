@@ -138,4 +138,58 @@ class HookiTest < Minitest::Test
       klass.new.save
     end
   end
+
+  test "subclass callbacks do not leak into parent" do
+    parent = Class.new do
+      include Hooki
+
+      before_method :log
+
+      def save
+        puts "parent save"
+      end
+
+      private
+
+      def log
+        puts "parent log"
+      end
+    end
+
+    child = Class.new(parent) do
+      before_method :child_log
+
+      def update
+        puts "child update"
+      end
+
+      private
+
+      def child_log
+        puts "child log"
+      end
+    end
+
+    assert_output_list(["parent log", "parent save"]) { parent.new.save }
+    assert_output_list(["parent log", "child log", "child update"]) { child.new.update }
+  end
+
+  test "subclass has its own mutex for thread-safe callback registration" do
+    parent = Class.new do
+      include Hooki
+
+      before_method :log
+
+      def save; end
+
+      private
+
+      def log; end
+    end
+
+    child = Class.new(parent)
+
+    assert_instance_of Mutex, child.instance_variable_get(:@lock)
+    refute_same parent.instance_variable_get(:@lock), child.instance_variable_get(:@lock)
+  end
 end
