@@ -31,10 +31,10 @@ class Foo
   include Hooki
 
   before_method :log_before, only: :bar # or [:bar]
-  after_method :log_after, expect: :bar # or [:bar]
+  after_method :log_after, except: :bar # or [:bar]
 
   before_singleton_method :log_singleton_before, only: [:bar] # or :bar
-  after_singleton_method :log_singleton_after, expect: [:bar] # or :bar
+  after_singleton_method :log_singleton_after, except: [:bar] # or :bar
 
   def self.bar
     puts "singleton bar"
